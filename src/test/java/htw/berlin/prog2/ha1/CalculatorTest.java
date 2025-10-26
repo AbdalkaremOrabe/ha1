@@ -93,20 +93,48 @@ class CalculatorTest {
 
     @Test
     @DisplayName("should display result after subtract two positive one-digit numbers")
-    void testPositivesubtraction() {
+    void testPositiveSubtraction() {
         Calculator calc = new Calculator();
 
         calc.pressDigitKey(9);
-
         calc.pressBinaryOperationKey("-");
         calc.pressDigitKey(8);
         calc.pressEqualsKey();
 
         String expected = "1";
         String actual = calc.readScreen();
+       // System.out.println(actual);
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    @DisplayName("should correctly chain multiple binary operations (2 + 3 + 4 = 9)")
+    void testMultipleOperations() {
+        //Dein Code merkt sich die erste Operation, führt aber keine Zwischenberechnung aus,
+        // wenn man nacheinander Operationen drückt.
+        Calculator calc = new Calculator();
+
+        calc.pressDigitKey(2);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(3);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(4);
+        calc.pressEqualsKey();
+
+        String expected = "9";
+        String actual = calc.readScreen();
 
         assertEquals(expected, actual);
     }
+
+
+
+
+
+
+
+
 
 
 
