@@ -76,20 +76,43 @@ public class Calculator {
      * @param operation "√" für Quadratwurzel, "%" für Prozent, "1/x" für Inversion
      */
     public void pressUnaryOperationKey(String operation) {
-        latestValue = Double.parseDouble(screen);
-        latestOperation = operation;
-        var result = switch(operation) {
-            case "√" -> Math.sqrt(Double.parseDouble(screen));
-            case "%" -> Double.parseDouble(screen) / 100;
-            case "1/x" -> 1 / Double.parseDouble(screen);
-            default -> throw new IllegalArgumentException();
-        };
+        double current = Double.parseDouble(screen);
+     // Neu:
+        // Bei der Prozent-Taste ("%") wird der Prozentwert relativ zum ersten Operanden berechnet,
+        // wenn zuvor eine binäre Operationstaste gedrückt wurde (z.B. 10 + 50% = 15).
+        // Andernfalls wird der Prozentwert als alleinstehender Wert berechnet (z.B. 50% = 0.5).
+
+        double result;
+
+        switch (operation) {
+            case "√":
+                result = Math.sqrt(current);
+                break;
+
+            case "%":
+                // Prozent relativ zum ersten Operand berechnen (wie echter Taschenrechner)
+                if (latestOperation.equals("+") || latestOperation.equals("-")
+                        || latestOperation.equals("x") || latestOperation.equals("/")) {
+                    result = latestValue * current / 100;
+                } else {
+                    // Alleinstehender Prozentwert (z. B. 50 % = 0.5)
+                    result = current / 100;
+                }
+                break;
+
+            case "1/x":
+                result = 1 / current;
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+
         screen = Double.toString(result);
-        if(screen.equals("NaN")) screen = "Error";
-        if(screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
-
+        if (screen.equals("NaN") || screen.equals("Infinity")) screen = "Error";
+        if (screen.endsWith(".0")) screen = screen.substring(0, screen.length() - 2);
+        if (screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
     }
-
     /**
      * Empfängt den Befehl der gedrückten Dezimaltrennzeichentaste, im Englischen üblicherweise "."
      * Fügt beim ersten Mal Drücken dem aktuellen Bildschirminhalt das Trennzeichen auf der rechten
