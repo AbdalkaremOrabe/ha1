@@ -128,7 +128,23 @@ class CalculatorTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    @DisplayName("should calculate percentage relative to first operand (e.g. 10 + 50% = 15)")
+    void testPercentageRelativeToFirstOperand() {
+        Calculator calc = new Calculator();
 
+        calc.pressDigitKey(1);
+        calc.pressDigitKey(0);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(5);
+        calc.pressDigitKey(0);
+        calc.pressUnaryOperationKey("%");
+        calc.pressEqualsKey();
+
+        String expected = "15";
+        String actual = calc.readScreen();
+        assertEquals(expected, actual);
+    }
 
 
 
